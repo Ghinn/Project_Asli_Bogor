@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '../../ui/card';
 import { Badge } from '../../ui/badge';
@@ -28,39 +28,118 @@ export function PersebaranUMKM() {
   const [selectedPoint, setSelectedPoint] = useState<UMKMPoint | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  const umkmPoints: UMKMPoint[] = [
-    // Bogor Tengah
-    { id: '1', name: 'Tahu Gejrot Raos', category: 'Makanan', address: 'Jl. Suryakencana No. 12', area: 'Bogor Tengah', status: 'active', x: 50, y: 45, color: '#FF8D28', orders: 456, rating: 4.9 },
-    { id: '2', name: 'Kopi Bogor Asli', category: 'Minuman', address: 'Jl. Pajajaran No. 89', area: 'Bogor Tengah', status: 'active', x: 48, y: 50, color: '#4CAF50', orders: 389, rating: 4.8 },
-    { id: '3', name: 'Roti Unyil Venus', category: 'Makanan', address: 'Jl. Raya Pajajaran', area: 'Bogor Tengah', status: 'active', x: 52, y: 48, color: '#FFB800', orders: 234, rating: 4.8 },
+  // Helper function to determine area from address
+  const getAreaFromAddress = (address: string): string => {
+    const addr = address.toLowerCase();
+    if (addr.includes('bogor tengah') || addr.includes('babakan') || addr.includes('suryakencana')) {
+      return 'Bogor Tengah';
+    }
+    if (addr.includes('bogor utara') || addr.includes('bantarjati') || addr.includes('tegal gundil')) {
+      return 'Bogor Utara';
+    }
+    if (addr.includes('bogor selatan') || addr.includes('cikaret') || addr.includes('bogor sel')) {
+      return 'Bogor Selatan';
+    }
+    if (addr.includes('bogor timur') || addr.includes('bogor tim') || addr.includes('baranangsiang') || addr.includes('sukasari') || addr.includes('ciawi') || addr.includes('cisarua')) {
+      return 'Bogor Timur';
+    }
+    if (addr.includes('bogor barat') || addr.includes('dramaga')) {
+      return 'Bogor Barat';
+    }
+    // Default to Bogor Tengah if unclear
+    return 'Bogor Tengah';
+  };
+
+  // Helper function to get color by category
+  const getColorByCategory = (category: string): string => {
+    const colors: Record<string, string> = {
+      'Makanan': '#FF8D28',
+      'Minuman': '#4CAF50',
+      'Kerajinan': '#2196F3',
+      'Fashion': '#9C27B0',
+      'Jasa': '#FF6B6B'
+    };
+    return colors[category] || '#858585';
+  };
+
+  // Helper function to get position based on area
+  const getPositionByArea = (area: string, index: number): { x: number; y: number } => {
+    const positions: Record<string, { baseX: number; baseY: number; spread: number }> = {
+      'Bogor Tengah': { baseX: 50, baseY: 45, spread: 8 },
+      'Bogor Utara': { baseX: 50, baseY: 25, spread: 10 },
+      'Bogor Selatan': { baseX: 50, baseY: 70, spread: 8 },
+      'Bogor Timur': { baseX: 70, baseY: 50, spread: 10 },
+      'Bogor Barat': { baseX: 25, baseY: 50, spread: 8 }
+    };
     
-    // Bogor Utara
-    { id: '4', name: 'Kerajinan Bambu Bogor', category: 'Kerajinan', address: 'Jl. Raya Tajur No. 45', area: 'Bogor Utara', status: 'active', x: 45, y: 25, color: '#2196F3', orders: 312, rating: 4.7 },
-    { id: '5', name: 'Batik Bogor Heritage', category: 'Fashion', address: 'Jl. Pahlawan No. 67', area: 'Bogor Utara', status: 'active', x: 55, y: 28, color: '#9C27B0', orders: 278, rating: 4.9 },
-    { id: '6', name: 'Asinan Bogor Pak Jaya', category: 'Makanan', address: 'Jl. Merdeka No. 23', area: 'Bogor Utara', status: 'inactive', x: 50, y: 30, color: '#858585', orders: 145, rating: 4.5 },
-    
-    // Bogor Selatan
-    { id: '7', name: 'Makaroni Ngehe', category: 'Makanan', address: 'Jl. Malabar No. 34', area: 'Bogor Selatan', status: 'active', x: 48, y: 65, color: '#FF6B6B', orders: 423, rating: 4.8 },
-    { id: '8', name: 'Kue Lapis Bogor', category: 'Makanan', address: 'Jl. Raya Bogor No. 78', area: 'Bogor Selatan', status: 'active', x: 52, y: 68, color: '#FFB800', orders: 367, rating: 4.7 },
-    { id: '9', name: 'Soto Kuning Bogor', category: 'Makanan', address: 'Jl. Sukasari No. 12', area: 'Bogor Selatan', status: 'active', x: 50, y: 70, color: '#FF8D28', orders: 298, rating: 4.9 },
-    
-    // Bogor Timur
-    { id: '10', name: 'Doclang Pak Aman', category: 'Makanan', address: 'Jl. Raya Ciluar No. 56', area: 'Bogor Timur', status: 'active', x: 70, y: 50, color: '#4CAF50', orders: 189, rating: 4.6 },
-    { id: '11', name: 'Talas Bogor Sangkuriang', category: 'Makanan', address: 'Jl. Pahlawan No. 90', area: 'Bogor Timur', status: 'active', x: 75, y: 45, color: '#FFB800', orders: 256, rating: 4.8 },
-    
-    // Bogor Barat
-    { id: '12', name: 'Keripik Talas Bogor', category: 'Makanan', address: 'Jl. Raya Dramaga No. 23', area: 'Bogor Barat', status: 'active', x: 25, y: 50, color: '#FF8D28', orders: 234, rating: 4.7 },
-    { id: '13', name: 'Aneka Jajanan Pasar', category: 'Makanan', address: 'Jl. Raya Bogor No. 45', area: 'Bogor Barat', status: 'active', x: 30, y: 55, color: '#4CAF50', orders: 178, rating: 4.6 },
-    { id: '14', name: 'Susu Kedelai Murni', category: 'Minuman', address: 'Jl. Lodaya No. 12', area: 'Bogor Barat', status: 'inactive', x: 28, y: 48, color: '#858585', orders: 123, rating: 4.5 },
+    const pos = positions[area] || positions['Bogor Tengah'];
+    const offset = (index % 3) * pos.spread - pos.spread;
+    return {
+      x: pos.baseX + offset,
+      y: pos.baseY + (Math.floor(index / 3) * 5)
+    };
+  };
+
+  // Real UMKM data from directory
+  const realUMKMData = [
+    { id: 1, name: 'Lapis Bogor Sangkuriang', category: 'Makanan', address: 'Jl. Pajajaran No.20i, RT.01/RW.11, Baranangsiang, Kec. Bogor Tim., Kota Bogor, Jawa Barat 16143' },
+    { id: 2, name: 'Roti Unyil Venus', category: 'Makanan', address: 'Ruko V-Point, Jl. Pajajaran No.1, RT.01/RW.01, Babakan, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16128' },
+    { id: 3, name: 'Asinan Sedap Gedung Dalam', category: 'Makanan', address: 'Jl. Siliwangi No.27C, RT.01/RW.01, Sukasari, Kec. Bogor Tim., Kota Bogor, Jawa Barat 16142' },
+    { id: 4, name: 'PIA Apple Pie', category: 'Makanan', address: 'Jl. Pangrango No.10, RT.04/RW.04, Babakan, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16128' },
+    { id: 5, name: 'Bika Bogor Talubi', category: 'Makanan', address: 'Jl. Pajajaran No.20M, RT.01/RW.11, Baranangsiang, Kec. Bogor Tim., Kota Bogor, Jawa Barat 16143' },
+    { id: 6, name: 'Macaroni Panggang (MP)', category: 'Makanan', address: 'Jl. Salak No.24, Babakan, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16128' },
+    { id: 7, name: 'Jumbo Bakery (Pusat Strudel Bogor)', category: 'Makanan', address: 'Jl. Pajajaran No.3F, RT.02/RW.01, Babakan, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16128' },
+    { id: 8, name: 'Chocomory', category: 'Makanan', address: 'Jl. Raya Puncak - Gadog No.KM 77, Leuwimalang, Kec. Cisarua, Kabupaten Bogor, Jawa Barat 16770' },
+    { id: 9, name: 'Kacang Bogor Istana', category: 'Makanan', address: 'Dijual di banyak pusat oleh-oleh, contoh: Priangansari, Jl. Raya Puncak - Gadog No.45, Ciawi, Kabupaten Bogor' },
+    { id: 10, name: 'Bogor Raincake', category: 'Makanan', address: 'Jl. Pajajaran No.31, RT.02/RW.01, Babakan, Kecamatan Bogor Tengah, Kota Bogor, Jawa Barat 16128' },
+    { id: 11, name: 'Rumah Talas Bogor', category: 'Makanan', address: 'Jl. Raya Pajajaran No.98, Bantarjati, Kec. Bogor Utara, Kota Bogor, Jawa Barat 16153' },
+    { id: 12, name: 'Miss Pumpkin', category: 'Makanan', address: 'Jl. Pajajaran No.43, RT.03/RW.10, Bantarjati, Kec. Bogor Utara, Kota Bogor, Jawa Barat 16153' },
+    { id: 13, name: 'Brownies Pisang Citarasa', category: 'Makanan', address: 'Toko Oleh-Oleh Citarasa, Jl. Raya Puncak - Gadog, Ciawi, Bogor' },
+    { id: 14, name: 'Mochi Mochi "Mochilaku"', category: 'Makanan', address: 'Ruko Villa Indah Pajajaran, Jl. Pajajaran No.18, RT.02/RW.11, Bantarjati, Kec. Bogor Utara, Kota Bogor' },
+    { id: 15, name: 'Priangansari', category: 'Makanan', address: 'Jl. Raya Puncak - Gadog No.45, Ciawi, Kec. Ciawi, Kabupaten Bogor, Jawa Barat 16720' },
+    { id: 16, name: 'Kopi Halimun', category: 'Minuman', address: 'Jl. Malabar No.23, RT.04/RW.07, Tegal Gundil, Kec. Bogor Utara, Kota Bogor' },
+    { id: 17, name: 'Batik Tradisiku', category: 'Kerajinan', address: 'Jl. Neglasari I No.2, RT.01/RW.04, Cikaret, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16132' },
+    { id: 18, name: 'Galeri Dekranasda Kota Bogor', category: 'Kerajinan', address: 'Jl. Bina Marga No.1D, RT.04/RW.11, Baranangsiang, Kec. Bogor Tim., Kota Bogor' },
+    { id: 19, name: 'Unchal Kaos Bogor', category: 'Kerajinan', address: 'Jl. Pajajaran No.1, RT.01/RW.01, Babakan, Kecamatan Bogor Tengah, Kota Bogor' },
+    { id: 20, name: 'Bir Kotjok Si Abah', category: 'Minuman', address: 'Jl. Suryakencana No.291, RT.02/RW.06, Gudang, Kecamatan Bogor Tengah, Kota Bogor' }
   ];
 
-  const areaStats = [
-    { area: 'Bogor Tengah', count: 45, active: 42, color: '#FF8D28' },
-    { area: 'Bogor Utara', count: 38, active: 35, color: '#2196F3' },
-    { area: 'Bogor Selatan', count: 52, active: 49, color: '#FFB800' },
-    { area: 'Bogor Timur', count: 31, active: 28, color: '#4CAF50' },
-    { area: 'Bogor Barat', count: 28, active: 24, color: '#9C27B0' },
-  ];
+  // Convert to UMKMPoint format with consistent values
+  const umkmPoints: UMKMPoint[] = useMemo(() => {
+    return realUMKMData.map((umkm, index) => {
+      const area = getAreaFromAddress(umkm.address);
+      const areaIndex = realUMKMData.filter((u, i) => i < index && getAreaFromAddress(u.address) === area).length;
+      const finalPos = getPositionByArea(area, areaIndex);
+      
+      // Generate consistent pseudo-random values based on ID
+      const seed = umkm.id * 17;
+      const orders = 100 + (seed % 500);
+      const rating = 4.5 + ((seed % 50) / 100);
+      
+      return {
+        id: umkm.id.toString(),
+        name: umkm.name,
+        category: umkm.category,
+        address: umkm.address,
+        area: area,
+        status: 'active' as const,
+        x: finalPos.x,
+        y: finalPos.y,
+        color: getColorByCategory(umkm.category),
+        orders: orders,
+        rating: Math.round(rating * 10) / 10
+      };
+    });
+  }, []);
+
+  // Calculate area stats from real data
+  const areaStats = useMemo(() => [
+    { area: 'Bogor Tengah', count: umkmPoints.filter(p => p.area === 'Bogor Tengah').length, active: umkmPoints.filter(p => p.area === 'Bogor Tengah' && p.status === 'active').length, color: '#FF8D28' },
+    { area: 'Bogor Utara', count: umkmPoints.filter(p => p.area === 'Bogor Utara').length, active: umkmPoints.filter(p => p.area === 'Bogor Utara' && p.status === 'active').length, color: '#2196F3' },
+    { area: 'Bogor Selatan', count: umkmPoints.filter(p => p.area === 'Bogor Selatan').length, active: umkmPoints.filter(p => p.area === 'Bogor Selatan' && p.status === 'active').length, color: '#FFB800' },
+    { area: 'Bogor Timur', count: umkmPoints.filter(p => p.area === 'Bogor Timur').length, active: umkmPoints.filter(p => p.area === 'Bogor Timur' && p.status === 'active').length, color: '#4CAF50' },
+    { area: 'Bogor Barat', count: umkmPoints.filter(p => p.area === 'Bogor Barat').length, active: umkmPoints.filter(p => p.area === 'Bogor Barat' && p.status === 'active').length, color: '#9C27B0' },
+  ], [umkmPoints]);
 
   const filteredPoints = umkmPoints.filter(point => {
     const matchesArea = selectedArea === 'all' || point.area === selectedArea;

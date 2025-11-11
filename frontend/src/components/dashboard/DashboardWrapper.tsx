@@ -10,6 +10,7 @@ import { PersebaranUMKM } from './admin/PersebaranUMKM';
 import { ManajemenData } from './admin/ManajemenData';
 import { ManajemenKonten } from './admin/ManajemenKonten';
 import { LayananLaporan } from './admin/LayananLaporan';
+import { AdminKeuangan } from './admin/AdminKeuangan';
 
 // User Components
 import { UserBeranda } from './user/UserBeranda';
@@ -96,7 +97,7 @@ export function DashboardWrapper() {
         case 'laporan':
           return <LayananLaporan />;
         case 'keuangan':
-          return <ComingSoonPage title="Keuangan Platform" description="Dashboard keuangan lengkap dengan analisis cash flow, profit margin, dan proyeksi pendapatan akan segera hadir!" icon="sparkles" />;
+          return <AdminKeuangan />;
         case 'profil':
           return <ProfilePage />;
         case 'notifikasi':

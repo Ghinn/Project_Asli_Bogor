@@ -35,9 +35,9 @@ export function AboutSection() {
           >
             <div className="relative">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1760992004049-b45d85564e39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbWFsbCUyMGJ1c2luZXNzJTIwbG9jYWwlMjBtYXJrZXR8ZW58MXx8fHwxNzYyNjk0NTIxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="UMKM Lokal"
-                className="w-full h-auto rounded-3xl shadow-2xl"
+                src="https://shopee.co.id/inspirasi-shopee/wp-content/uploads/2025/03/umkm-adalah.webp"
+                alt="UMKM Kota Bogor - Tugu Kujang dan Pasar Tradisional Bogor"
+                className="w-full h-auto rounded-3xl shadow-2xl object-cover"
               />
               {/* Decorative gradient overlay */}
               <div className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full opacity-30 blur-2xl" style={{ background: 'linear-gradient(135deg, #FF8D28 0%, #FFB84D 100%)' }}></div>

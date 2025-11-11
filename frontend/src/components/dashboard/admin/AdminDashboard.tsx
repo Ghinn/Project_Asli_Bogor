@@ -1,8 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { Users, Store, Bike, TrendingUp, DollarSign, Package } from 'lucide-react';
 import { PersonalizedGreeting } from '../../PersonalizedGreeting';
+import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ComposedChart } from 'recharts';
 
 export function AdminDashboard() {
+  // Data transaksi 7 hari terakhir
+  const transactionData7Days = [
+    { day: 'Sen', transaksi: 234, revenue: 3510000 },
+    { day: 'Sel', transaksi: 289, revenue: 4335000 },
+    { day: 'Rab', transaksi: 267, revenue: 4005000 },
+    { day: 'Kam', transaksi: 312, revenue: 4680000 },
+    { day: 'Jum', transaksi: 345, revenue: 5175000 },
+    { day: 'Sab', transaksi: 389, revenue: 5835000 },
+    { day: 'Min', transaksi: 298, revenue: 4470000 }
+  ];
+
   const stats = [
     { label: 'Total User', value: '1,234', icon: Users, color: '#2196F3' },
     { label: 'Total UMKM', value: '156', icon: Store, color: '#FF8D28' },
@@ -56,8 +68,73 @@ export function AdminDashboard() {
             <CardTitle style={{ color: '#2F4858' }}>Statistik Transaksi</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center justify-center" style={{ backgroundColor: '#F5F5F5', borderRadius: '8px' }}>
-              <p className="body-3" style={{ color: '#858585' }}>Grafik transaksi 7 hari terakhir</p>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={transactionData7Days}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E0E0E0" />
+                  <XAxis 
+                    dataKey="day" 
+                    stroke="#858585"
+                    style={{ fontSize: '12px' }}
+                  />
+                  <YAxis 
+                    yAxisId="left"
+                    stroke="#858585"
+                    style={{ fontSize: '12px' }}
+                    label={{ value: 'Jumlah Transaksi', angle: -90, position: 'insideLeft', style: { fontSize: '11px', fill: '#858585' } }}
+                  />
+                  <YAxis 
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="#4CAF50"
+                    style={{ fontSize: '12px' }}
+                    label={{ value: 'Revenue (Rp)', angle: 90, position: 'insideRight', style: { fontSize: '11px', fill: '#4CAF50' } }}
+                    tickFormatter={(value) => {
+                      if (value >= 1000000) {
+                        return `${(value / 1000000).toFixed(1)}M`;
+                      }
+                      return `${(value / 1000).toFixed(0)}K`;
+                    }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      border: '1px solid #E0E0E0',
+                      borderRadius: '8px',
+                      padding: '8px'
+                    }}
+                    formatter={(value: number, name: string) => {
+                      if (name === 'revenue') {
+                        return [`Rp ${value.toLocaleString('id-ID')}`, 'Revenue'];
+                      }
+                      return [value, 'Jumlah Transaksi'];
+                    }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
+                  />
+                  <Line 
+                    yAxisId="left"
+                    type="monotone" 
+                    dataKey="transaksi" 
+                    stroke="#FF8D28" 
+                    strokeWidth={3}
+                    dot={{ fill: '#FF8D28', r: 5 }}
+                    name="Jumlah Transaksi"
+                    activeDot={{ r: 7 }}
+                  />
+                  <Line 
+                    yAxisId="right"
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#4CAF50" 
+                    strokeWidth={3}
+                    dot={{ fill: '#4CAF50', r: 5 }}
+                    name="Revenue (Rp)"
+                    activeDot={{ r: 7 }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>

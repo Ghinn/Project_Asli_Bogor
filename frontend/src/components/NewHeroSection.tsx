@@ -93,25 +93,59 @@ export function NewHeroSection() {
             transition={{ duration: 0.8 }}
           >
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.6 }}
-              className="flex items-center"
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1, 
+                y: 0 
+              }}
+              transition={{ 
+                delay: 0.25, 
+                duration: 0.8,
+                type: "spring",
+                stiffness: 100
+              }}
+              className="flex items-center mb-4"
             >
-              <AsliBogorLogo
-                variant="primary"
-                className="h-20 w-auto drop-shadow-lg"
-              />
+              <motion.div
+                animate={{
+                  scale: [1, 1.05, 1],
+                  filter: [
+                    "drop-shadow(0 10px 20px rgba(255, 141, 40, 0.3))",
+                    "drop-shadow(0 15px 30px rgba(255, 141, 40, 0.5))",
+                    "drop-shadow(0 10px 20px rgba(255, 141, 40, 0.3))"
+                  ]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <AsliBogorLogo
+                  variant="primary"
+                  className="h-32 md:h-40 lg:h-48 w-auto drop-shadow-2xl"
+                  style={{
+                    filter: "drop-shadow(0 10px 25px rgba(255, 141, 40, 0.4))"
+                  }}
+                />
+              </motion.div>
             </motion.div>
 
-            <motion.h3
-              style={{ color: '#2F4858' }}
+            <motion.h1
+              style={{ 
+                color: '#2F4858',
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                fontWeight: 700,
+                lineHeight: 1.2
+              }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
+              className="mb-2"
             >
               Bikin Keren UMKM Lokal
-            </motion.h3>
+            </motion.h1>
 
             <motion.p 
               style={{ color: '#4A4A4A', fontSize: '18px' }}

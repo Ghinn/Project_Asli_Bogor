@@ -9,6 +9,7 @@ import { AboutSection } from "./components/AboutSection";
 import { FeaturesSection } from "./components/FeaturesSection";
 import { Footer } from "./components/Footer";
 import { UMKMDetailPage } from "./components/UMKMDetailPage";
+import { ShopPage } from "./components/ShopPage";
 import { RoleSelectionPage } from "./components/auth/RoleSelectionPage";
 import { DriverLoginPage } from "./components/auth/DriverLoginPage";
 import { DriverRegisterPage } from "./components/auth/DriverRegisterPage";
@@ -31,6 +32,10 @@ interface UMKMItem {
   address: string;
   image: string;
   description: string;
+  about?: string;
+  phone?: string;
+  operatingHours?: string;
+  mapsLink?: string;
 }
 
 type AuthView = 
@@ -46,6 +51,7 @@ type AuthView =
 function AppContent() {
   const { user } = useAuth();
   const [selectedUMKM, setSelectedUMKM] = useState<UMKMItem | null>(null);
+  const [shopUMKM, setShopUMKM] = useState<UMKMItem | null>(null);
   const [authView, setAuthView] = useState<AuthView>(null);
 
   const handleSelectUMKM = (umkm: UMKMItem) => {
@@ -61,6 +67,26 @@ function AppContent() {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }, 100);
+  };
+
+  const handleShopClick = (umkm: UMKMItem) => {
+    setShopUMKM(umkm);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackFromShop = () => {
+    setShopUMKM(null);
+    // Return to detail page if we came from there
+    if (selectedUMKM) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleCheckout = (items: any[]) => {
+    // In real app, this would navigate to checkout page
+    // For now, we'll just log it
+    console.log('Checkout items:', items);
+    // You can navigate to checkout page here or integrate with payment gateway
   };
 
   const handleRoleSelect = (role: 'user' | 'umkm' | 'driver') => {
@@ -162,11 +188,29 @@ function AppContent() {
     );
   }
 
+  // Show shop page if shop is selected
+  if (shopUMKM) {
+    return (
+      <>
+        <ShopPage 
+          umkm={shopUMKM} 
+          onBack={handleBackFromShop}
+          onCheckout={handleCheckout}
+        />
+        <Footer />
+      </>
+    );
+  }
+
   // Show UMKM detail page if selected
   if (selectedUMKM) {
     return (
       <>
-        <UMKMDetailPage umkm={selectedUMKM} onBack={handleBackToDirectory} />
+        <UMKMDetailPage 
+          umkm={selectedUMKM} 
+          onBack={handleBackToDirectory}
+          onShopClick={() => handleShopClick(selectedUMKM)}
+        />
         <Footer />
       </>
     );
