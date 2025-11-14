@@ -306,7 +306,7 @@ export function DirectorySection({ onSelectUMKM }: DirectorySectionProps) {
   };
 
   return (
-    <section id="direktori" className="py-20 relative" style={{ background: 'linear-gradient(to bottom, #FFFFFF 0%, #FFF4E6 100%)' }}>
+    <section id="direktori" className="py-24 lg:py-32 relative" style={{ background: 'linear-gradient(to bottom, #FFFFFF 0%, #FFF4E6 100%)' }}>
       <div className="container mx-auto px-4">
         {/* Title */}
         <motion.div 

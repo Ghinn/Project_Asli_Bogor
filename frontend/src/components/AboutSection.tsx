@@ -22,7 +22,7 @@ export function AboutSection() {
   ];
 
   return (
-    <section id="tentang" className="py-20 relative" style={{ background: 'linear-gradient(to bottom, #FFF4E6 0%, #FFFFFF 100%)' }}>
+    <section id="tentang" className="py-24 lg:py-32 relative" style={{ background: 'linear-gradient(to bottom, #FFF4E6 0%, #FFFFFF 100%)' }}>
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left: Illustration */}

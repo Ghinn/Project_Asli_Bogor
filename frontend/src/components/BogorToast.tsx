@@ -16,7 +16,7 @@ export const BogorToast = {
     toast.success(`Pesanan #${orderNumber} lagi diproses! 📦`, {
       icon: <CheckCircle size={20} style={{ color: '#2196F3' }} />,
       description: 'Pelanggan pasti seneng nih!',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -24,7 +24,7 @@ export const BogorToast = {
     toast.success(`Yeay! Pesanan #${orderNumber} selesai! 🎉`, {
       icon: <CheckCircle size={20} style={{ color: '#4CAF50' }} />,
       description: 'Mantap! Jangan lupa minta review ya!',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -41,7 +41,7 @@ export const BogorToast = {
     toast.info(`Target harian ${percentage}% tercapai! Keep going! 💪`, {
       icon: <TrendingUp size={20} style={{ color: '#FF8D28' }} />,
       description: 'Tinggal sedikit lagi nih!',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -50,7 +50,7 @@ export const BogorToast = {
     toast.info('Hujan turun ~ tetap semangat kirim pesanan ya! ☔', {
       icon: <CloudRain size={20} style={{ color: '#2196F3' }} />,
       description: 'Hati-hati di jalan, safety first!',
-      duration: 6000,
+      duration: 5000,
     });
   },
 
@@ -59,7 +59,7 @@ export const BogorToast = {
     toast.warning(`Stok ${productName} tinggal ${stock}! ⚠️`, {
       icon: <AlertTriangle size={20} style={{ color: '#FF9800' }} />,
       description: 'Segera restock sebelum kehabisan!',
-      duration: 6000,
+      duration: 5000,
     });
   },
 
@@ -67,7 +67,7 @@ export const BogorToast = {
     toast.error(`Waduh! ${productName} habis! 😱`, {
       icon: <AlertTriangle size={20} style={{ color: '#FF6B6B' }} />,
       description: 'Customer lagi banyak yang nyari nih!',
-      duration: 6000,
+      duration: 5000,
     });
   },
 
@@ -92,7 +92,7 @@ export const BogorToast = {
     toast.success('Pengiriman selesai! Good job! 👍', {
       icon: <CheckCircle size={20} style={{ color: '#4CAF50' }} />,
       description: 'Customer pasti seneng nih!',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -101,7 +101,7 @@ export const BogorToast = {
     toast.info(`Pelanggan baru: ${name}! 👋`, {
       icon: <Info size={20} style={{ color: '#2196F3' }} />,
       description: 'Berikan pelayanan terbaik ya!',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -117,7 +117,7 @@ export const BogorToast = {
   success: (message: string) => {
     toast.success(message, {
       description: 'Alhamdulillah lancar jaya! ✨',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -125,7 +125,7 @@ export const BogorToast = {
   info: (message: string, description?: string) => {
     toast.info(message, {
       description: description || 'Info penting nih!',
-      duration: 4000,
+      duration: 5000,
     });
   },
 
@@ -134,7 +134,7 @@ export const BogorToast = {
     toast.success(`🏆 Achievement Unlocked: ${badgeName}!`, {
       icon: <Gift size={20} style={{ color: '#FFB800' }} />,
       description: 'Mantap jiwa! Keep up the good work!',
-      duration: 6000,
+      duration: 5000,
     });
   }
 };

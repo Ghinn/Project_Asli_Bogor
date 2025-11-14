@@ -23,7 +23,6 @@ import { UMKMOnboarding } from "./components/onboarding/UMKMOnboarding";
 import { DriverOnboarding } from "./components/onboarding/DriverOnboarding";
 import { DashboardWrapper } from "./components/dashboard/DashboardWrapper";
 import { NotificationToast } from "./components/NotificationToast";
-import { WeatherAnimation } from "./components/WeatherAnimation";
 import { WeatherAlert } from "./components/WeatherAlert";
 import { Toaster } from "./components/ui/sonner";
 
@@ -111,7 +110,6 @@ function AppContent() {
       <>
         <DashboardWrapper />
         <NotificationToast />
-        <WeatherAnimation />
         <WeatherAlert />
       </>
     );
@@ -217,11 +215,21 @@ function AppContent() {
     <div className="min-h-screen">
       <LandingNavbar onRoleSelect={handleRoleSelect} />
       <NewHeroSection />
+      <div className="mt-8 lg:mt-12">
       <DirectorySection onSelectUMKM={handleSelectUMKM} />
+      </div>
+      <div className="mt-8 lg:mt-12">
       <AuthSectionLanding onRoleSelect={handleRoleSelect} />
+      </div>
+      <div className="mt-8 lg:mt-12">
       <AboutSection />
+      </div>
+      <div className="mt-8 lg:mt-12">
       <FeaturesSection />
+      </div>
+      <div className="mt-8 lg:mt-12">
       <Footer />
+      </div>
     </div>
   );
 }

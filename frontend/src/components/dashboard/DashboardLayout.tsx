@@ -5,7 +5,6 @@ import { useNotifications } from '../../contexts/NotificationContext';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { FloatingShapes } from '../FloatingShapes';
-import { ParticleRain } from '../ParticleRain';
 import { MountainSilhouette } from '../MountainSilhouette';
 import { motion } from 'framer-motion';
 
@@ -90,6 +89,7 @@ export function DashboardLayout({ children, activeMenu, onMenuChange }: Dashboar
           { id: 'produk', label: 'Data Produk', icon: Package },
           { id: 'pesanan', label: 'Manajemen Pesanan', icon: ShoppingCart },
           { id: 'keuangan', label: 'Keuangan', icon: DollarSign },
+          { id: 'info', label: 'Info', icon: Info },
           { id: 'notifikasi', label: 'Notifikasi', icon: Bell, badge: unreadCount },
           { id: 'bantuan', label: 'Bantuan', icon: HelpCircle },
           { id: 'pengaturan', label: 'Pengaturan Akun', icon: Settings }
@@ -102,6 +102,7 @@ export function DashboardLayout({ children, activeMenu, onMenuChange }: Dashboar
           { id: 'peta', label: 'Peta Navigasi', icon: Navigation },
           { id: 'riwayat', label: 'Riwayat Pengiriman', icon: FileText },
           { id: 'keuangan', label: 'Keuangan', icon: DollarSign },
+          { id: 'info', label: 'Info', icon: Info },
           { id: 'profil', label: 'Profil', icon: User },
           { id: 'notifikasi', label: 'Notifikasi', icon: Bell, badge: unreadCount },
           { id: 'bantuan', label: 'Bantuan', icon: HelpCircle },
@@ -231,7 +232,6 @@ export function DashboardLayout({ children, activeMenu, onMenuChange }: Dashboar
       
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:flex-col w-64 flex-shrink-0 relative z-10" style={{ backgroundColor: '#2F4858' }}>
-        <ParticleRain count={10} />
         <SidebarContent />
       </aside>
 

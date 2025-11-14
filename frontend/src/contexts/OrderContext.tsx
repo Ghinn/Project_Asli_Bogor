@@ -29,6 +29,7 @@ export interface Order {
   updatedAt?: string;
   deliveryAddress: string;
   paymentMethod?: string;
+  paymentStatus?: 'pending' | 'paid' | 'failed';
   driverName?: string;
   driverId?: string;
   pickupTime?: string;
@@ -216,6 +217,7 @@ export function OrderProvider({ children }: OrderProviderProps) {
         updatedAt: order.updatedAt,
         deliveryAddress: order.deliveryAddress,
         paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus || 'pending',
         driverName: order.driverName,
         driverId: order.driverId,
         pickupTime: order.pickupTime,

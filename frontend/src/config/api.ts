@@ -22,6 +22,7 @@ export const api = {
     create: `${API_BASE_URL}/orders`,
     updateStatus: (id: string) => `${API_BASE_URL}/orders/${id}/status`,
     updateTracking: (id: string) => `${API_BASE_URL}/orders/${id}/tracking`,
+    updateDriverLocation: (id: string) => `${API_BASE_URL}/orders/${id}/driver-location`,
     processPayment: `${API_BASE_URL}/orders/payment`,
     delete: (id: string) => `${API_BASE_URL}/orders/${id}`,
   },
@@ -56,20 +57,13 @@ export const api = {
     delete: (id: string) => `${API_BASE_URL}/cart/${id}`,
     clear: `${API_BASE_URL}/cart/clear`,
   },
-  wallet: {
-    getByUser: (userId: string) => `${API_BASE_URL}/wallet/${userId}`,
-    topUp: `${API_BASE_URL}/wallet/topup`,
-    getTransactions: (userId: string) => `${API_BASE_URL}/wallet/${userId}/transactions`,
-  },
-  orders: {
-    getAll: `${API_BASE_URL}/orders`,
-    getById: (id: string) => `${API_BASE_URL}/orders/${id}`,
-    create: `${API_BASE_URL}/orders`,
-    updateStatus: (id: string) => `${API_BASE_URL}/orders/${id}/status`,
-    updateTracking: (id: string) => `${API_BASE_URL}/orders/${id}/tracking`,
-    updateDriverLocation: (id: string) => `${API_BASE_URL}/orders/${id}/driver-location`,
-    processPayment: `${API_BASE_URL}/orders/payment`,
-    delete: (id: string) => `${API_BASE_URL}/orders/${id}`,
+  content: {
+    getAll: `${API_BASE_URL}/content`,
+    getPublished: `${API_BASE_URL}/content/published`,
+    getById: (id: string) => `${API_BASE_URL}/content/${id}`,
+    create: `${API_BASE_URL}/content`,
+    update: (id: string) => `${API_BASE_URL}/content/${id}`,
+    delete: (id: string) => `${API_BASE_URL}/content/${id}`,
   },
 };
 

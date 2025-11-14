@@ -10,7 +10,7 @@ export function AuthSectionLanding({ onRoleSelect }: AuthSectionLandingProps) {
   return (
     <section 
       id="auth-section" 
-      className="py-20 relative overflow-hidden"
+      className="py-24 lg:py-32 relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF4E6 100%)',
       }}

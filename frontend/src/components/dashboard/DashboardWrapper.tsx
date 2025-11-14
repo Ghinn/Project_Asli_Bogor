@@ -42,6 +42,8 @@ import { NotificationPage } from './NotificationPage';
 import { SettingsPage } from './SettingsPage';
 import { HelpPage } from './HelpPage';
 import { ComingSoonPage } from './ComingSoonPage';
+import { InfoPage } from './InfoPage';
+import { InfoDetailPage } from './InfoDetailPage';
 
 // Placeholder Components
 import { Card, CardContent } from '../ui/card';
@@ -76,6 +78,14 @@ export function DashboardWrapper() {
         return 'dashboard';
     }
   });
+  const [infoDetailId, setInfoDetailId] = useState<string | null>(null);
+
+  // Reset info detail when menu changes
+  useEffect(() => {
+    if (activeMenu !== 'info') {
+      setInfoDetailId(null);
+    }
+  }, [activeMenu]);
 
   if (!user) return null;
 
@@ -137,7 +147,10 @@ export function DashboardWrapper() {
         case 'dompet':
           return <DompetPage />;
         case 'info':
-          return <PlaceholderPage title="Info & Artikel" />;
+          if (infoDetailId) {
+            return <InfoDetailPage contentId={infoDetailId} onBack={() => setInfoDetailId(null)} />;
+          }
+          return <InfoPage onViewDetail={(id) => setInfoDetailId(id)} />;
         case 'profil':
           return <ProfilePage />;
         case 'notifikasi':
@@ -166,6 +179,11 @@ export function DashboardWrapper() {
           return <ManajemenPesanan />;
         case 'keuangan':
           return <KeuanganToko />;
+        case 'info':
+          if (infoDetailId) {
+            return <InfoDetailPage contentId={infoDetailId} onBack={() => setInfoDetailId(null)} />;
+          }
+          return <InfoPage onViewDetail={(id) => setInfoDetailId(id)} />;
         case 'notifikasi':
           return <NotificationPage />;
         case 'bantuan':
@@ -192,6 +210,11 @@ export function DashboardWrapper() {
           return <RiwayatPengiriman />;
         case 'keuangan':
           return <KeuanganDriver />;
+        case 'info':
+          if (infoDetailId) {
+            return <InfoDetailPage contentId={infoDetailId} onBack={() => setInfoDetailId(null)} />;
+          }
+          return <InfoPage onViewDetail={(id) => setInfoDetailId(id)} />;
         case 'profil':
           return <ProfilePage />;
         case 'notifikasi':

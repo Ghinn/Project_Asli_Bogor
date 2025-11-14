@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
@@ -17,8 +17,10 @@ import {
   Plus,
   Search,
   Filter,
-  TrendingUp
+  TrendingUp,
+  Loader2
 } from 'lucide-react';
+import { api } from '../../../config/api';
 
 interface Content {
   id: string;
@@ -38,6 +40,27 @@ interface Content {
 export function ManajemenKonten() {
   const [activeTab, setActiveTab] = useState<'all' | 'article' | 'announcement' | 'promotion'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [contents, setContents] = useState<Content[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchContents();
+  }, []);
+
+  const fetchContents = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(api.content.getAll);
+      if (response.ok) {
+        const data = await response.json();
+        setContents(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching contents:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleTabChange = (value: string) => {
     if (value === 'all' || value === 'article' || value === 'announcement' || value === 'promotion') {
@@ -45,7 +68,7 @@ export function ManajemenKonten() {
     }
   };
 
-  const contents: Content[] = [
+  const mockContents: Content[] = [
     {
       id: '1',
       type: 'article',
@@ -132,7 +155,7 @@ export function ManajemenKonten() {
     }
   ];
 
-  const filteredContents = contents.filter(content => {
+  const filteredContents = (contents.length > 0 ? contents : mockContents).filter(content => {
     const matchesTab = activeTab === 'all' || content.type === activeTab;
     const matchesSearch = 
       content.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -281,14 +304,19 @@ export function ManajemenKonten() {
       </motion.div>
 
       {/* Content Grid */}
-      <motion.div
-        className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        <AnimatePresence mode="popLayout">
-          {filteredContents.map((content, index) => (
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="animate-spin" size={32} style={{ color: '#FF8D28' }} />
+        </div>
+      ) : (
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredContents.map((content, index) => (
             <motion.div
               key={content.id}
               layout
@@ -391,6 +419,7 @@ export function ManajemenKonten() {
           ))}
         </AnimatePresence>
       </motion.div>
+      )}
 
       {/* Empty State */}
       {filteredContents.length === 0 && (
