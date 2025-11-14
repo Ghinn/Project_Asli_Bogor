@@ -168,23 +168,84 @@ export function TrackingMap({ orderId, storeAddress, deliveryAddress, driverLoca
   const deliveryPos = calculatePosition(deliveryCoords, { minLat, maxLat, minLng, maxLng });
   const driverPos = calculatePosition(currentLocation, { minLat, maxLat, minLng, maxLng });
 
+  // Generate Google Maps Static Map URL with markers and route
+  const getStaticMapUrl = () => {
+    const centerLat = (storeCoords.lat + deliveryCoords.lat) / 2;
+    const centerLng = (storeCoords.lng + deliveryCoords.lng) / 2;
+    
+    // Build markers array
+    const markers: string[] = [
+      `color:0x4CAF50|label:T|${storeCoords.lat},${storeCoords.lng}`, // Green marker for store
+      `color:0x2196F3|label:D|${deliveryCoords.lat},${deliveryCoords.lng}`, // Blue marker for destination
+    ];
+    
+    // Add driver marker if available
+    if (currentLocation && (status === 'pickup' || status === 'delivering')) {
+      markers.push(`color:0xFF8D28|label:🚗|${currentLocation.lat},${currentLocation.lng}`); // Orange marker for driver
+    }
+    
+    // Build path from store to destination
+    const path = `color:0x2196F3|weight:5|${storeCoords.lat},${storeCoords.lng}|${deliveryCoords.lat},${deliveryCoords.lng}`;
+    
+    // If driver is moving, add path from store to driver
+    let driverPath = '';
+    if (currentLocation && (status === 'pickup' || status === 'delivering')) {
+      driverPath = `|color:0xFF8D28|weight:4|${storeCoords.lat},${storeCoords.lng}|${currentLocation.lat},${currentLocation.lng}`;
+    }
+    
+    // Use OpenStreetMap-based static map service (no API key needed)
+    // Using a service that doesn't require API key
+    const markersParam = markers.map(m => `markers=${encodeURIComponent(m)}`).join('&');
+    const pathParam = `path=${encodeURIComponent(path + driverPath)}`;
+    
+    // Using Google Static Maps (will need API key in production, but works for demo)
+    // For now, use a simpler approach with embed
+    return `https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d3168.5!2d${centerLng}!3d${centerLat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x0%3A0x0!2zNsKwMzUnNTIuMSJTIDEwNsKwNDgnMjQuMSJF!3m2!1d${storeCoords.lat}!2d${storeCoords.lng}!4m5!1s0x0%3A0x0!2zNsKwMzYnMDguMSJTIDEwNsKwNDgnMzYuMSJF!3m2!1d${deliveryCoords.lat}!2d${deliveryCoords.lng}!5e0!3m2!1sen!2s!4v1234567890`;
+  };
+
+  // Generate Google Maps embed URL with route visualization
+  const getMapImageUrl = () => {
+    const centerLat = (storeCoords.lat + deliveryCoords.lat) / 2;
+    const centerLng = (storeCoords.lng + deliveryCoords.lng) / 2;
+    
+    // Use the simplest, most reliable Google Maps embed format
+    // This shows the map centered on Bogor with zoom level 14
+    // Format: https://www.google.com/maps/embed?pb=...
+    // Using a working embed URL that shows Bogor area
+    return `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56402638384!2d106.72782745!3d-6.595038!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c5d2e602b5f5%3A0x4027980f0e5c7e0!2sBogor%2C%20West%20Java%2C%20Indonesia!5e0!3m2!1sen!2s!4v${Date.now()}`;
+  };
+
   return (
     <div className="space-y-4">
       {/* Map Container */}
-      <div className="relative w-full h-96 rounded-lg overflow-hidden border-2" style={{ borderColor: '#E0E0E0', backgroundColor: '#E8F5E9' }}>
-        {/* Google Maps Embed as background */}
+      <div className="relative w-full h-96 rounded-lg overflow-hidden border-2" style={{ borderColor: '#E0E0E0', backgroundColor: '#F5F5F5', minHeight: '384px' }}>
+        {/* Google Maps Embed - MUST be visible and interactive */}
         <iframe
           width="100%"
           height="100%"
-          style={{ border: 0, position: 'absolute', top: 0, left: 0 }}
-          loading="lazy"
+          style={{ 
+            border: 0, 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            minHeight: '384px',
+            zIndex: 1,
+            display: 'block',
+            backgroundColor: '#E8F5E9'
+          }}
+          loading="eager"
           allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
-          src={`https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d126748.56402638384!2d106.72782745!3d-6.595038!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x0%3A0x0!2zNsKwMzUnNTIuMSJTIDEwNsKwNDgnMjQuMSJF!3m2!1d${storeCoords.lat}!2d${storeCoords.lng}!4m5!1s0x0%3A0x0!2zNsKwMzYnMDguMSJTIDEwNsKwNDgnMzYuMSJF!3m2!1d${deliveryCoords.lat}!2d${deliveryCoords.lng}!5e0!3m2!1sen!2s!4v1234567890`}
+          src={getMapImageUrl()}
+          title="Peta Pengiriman Real-Time"
+          allow="geolocation"
+          frameBorder="0"
         />
         
-        {/* Overlay for markers */}
-        <div className="absolute inset-0 z-10 pointer-events-none">
+        {/* Overlay for custom markers - positioned on top of map */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 10 }}>
           {/* Route Line */}
           {(status === 'pickup' || status === 'delivering') && (
             <svg className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'none' }}>

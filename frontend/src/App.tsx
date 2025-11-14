@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { WeatherProvider } from "./contexts/WeatherContext";
 import { OrderProvider } from "./contexts/OrderContext";
+import { LandingNavbar } from "./components/LandingNavbar";
 import { NewHeroSection } from "./components/NewHeroSection";
 import { DirectorySection } from "./components/DirectorySection";
 import { AuthSectionLanding } from "./components/AuthSectionLanding";
@@ -214,6 +215,7 @@ function AppContent() {
   // Show landing page
   return (
     <div className="min-h-screen">
+      <LandingNavbar onRoleSelect={handleRoleSelect} />
       <NewHeroSection />
       <DirectorySection onSelectUMKM={handleSelectUMKM} />
       <AuthSectionLanding onRoleSelect={handleRoleSelect} />

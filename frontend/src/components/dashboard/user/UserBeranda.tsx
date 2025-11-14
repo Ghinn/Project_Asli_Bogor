@@ -10,6 +10,7 @@ import { PersonalizedGreeting } from '../../PersonalizedGreeting';
 import { GamificationBadge } from '../../GamificationBadge';
 import { api } from '../../../config/api';
 import { useAuth } from '../../../contexts/AuthContext';
+import { ProductDetailPage } from './ProductDetailPage';
 
 interface Product {
   id: string;
@@ -29,6 +30,7 @@ export function UserBeranda() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const categories = ['Semua', 'Makanan', 'Minuman', 'Kerajinan', 'Jasa'];
 
@@ -108,6 +110,25 @@ export function UserBeranda() {
     toast.success(`${productName} ditambahkan ke wishlist!`);
   };
 
+  const handleProductClick = (productId: string) => {
+    setSelectedProductId(productId);
+  };
+
+  const handleBackToBeranda = () => {
+    setSelectedProductId(null);
+  };
+
+  // Show product detail page if a product is selected
+  if (selectedProductId) {
+    return (
+      <ProductDetailPage 
+        productId={selectedProductId} 
+        onBack={handleBackToBeranda}
+        onProductSelect={setSelectedProductId}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Personalized Greeting */}
@@ -178,7 +199,7 @@ export function UserBeranda() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map(product => (
-          <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+          <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleProductClick(product.id)}>
             <div className="relative">
               <ImageWithFallback
                 src={product.image}
@@ -186,8 +207,11 @@ export function UserBeranda() {
                 className="w-full h-48 object-cover"
               />
               <button
-                onClick={() => handleAddToWishlist(product.name)}
-                className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToWishlist(product.name);
+                }}
+                className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors z-10"
               >
                 <Heart size={20} style={{ color: '#FF8D28' }} />
               </button>
@@ -220,7 +244,10 @@ export function UserBeranda() {
                 <Button
                   size="sm"
                   style={{ backgroundColor: '#FF8D28', color: '#FFFFFF' }}
-                  onClick={() => handleAddToCart(product)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product);
+                  }}
                   disabled={addingToCart === product.id}
                 >
                   {addingToCart === product.id ? (
