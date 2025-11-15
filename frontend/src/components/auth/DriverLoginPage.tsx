@@ -28,9 +28,10 @@ export function DriverLoginPage({ onSwitchToRegister, onBack }: DriverLoginPageP
     try {
       await login(email, password);
       toast.success('Login berhasil! Selamat datang Driver.');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Driver login error:', error);
-      toast.error('Login gagal. Periksa kembali email dan password Anda.');
+      const errorMessage = error?.message || 'Login gagal. Periksa kembali email dan password Anda.';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

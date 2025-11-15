@@ -53,8 +53,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Login gagal');
+        let errorMessage = 'Login gagal';
+        try {
+          const error = await response.json();
+          errorMessage = error.error || error.message || 'Login gagal';
+        } catch (e) {
+          // Jika response bukan JSON
+          errorMessage = `Login gagal: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -75,7 +82,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Login error:', error);
       // Handle network errors
       if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-        throw new Error('Tidak dapat terhubung ke server. Pastikan backend sudah berjalan di http://localhost:3000');
+        const isProduction = import.meta.env.PROD;
+        const errorMsg = isProduction 
+          ? 'Tidak dapat terhubung ke server. Silakan coba lagi nanti.'
+          : 'Tidak dapat terhubung ke server. Pastikan backend server sudah berjalan (jalankan: npm run dev:all)';
+        throw new Error(errorMsg);
       }
       throw error;
     }
@@ -95,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         let errorMessage = 'Registrasi gagal';
         try {
           const error = await response.json();
-          errorMessage = error.error || errorMessage;
+          errorMessage = error.error || error.message || 'Registrasi gagal';
         } catch (e) {
           // Jika response bukan JSON
           errorMessage = `Server error: ${response.status} ${response.statusText}`;
@@ -120,7 +131,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Registration error:', error);
       // Handle network errors
       if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-        throw new Error('Tidak dapat terhubung ke server. Pastikan backend sudah berjalan di http://localhost:3000');
+        const isProduction = import.meta.env.PROD;
+        const errorMsg = isProduction 
+          ? 'Tidak dapat terhubung ke server. Silakan coba lagi nanti.'
+          : 'Tidak dapat terhubung ke server. Pastikan backend server sudah berjalan (jalankan: npm run dev:all)';
+        throw new Error(errorMsg);
       }
       throw error;
     }

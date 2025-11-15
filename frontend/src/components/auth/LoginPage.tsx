@@ -27,9 +27,10 @@ export function LoginPage({ onSwitchToRegister, onClose }: LoginPageProps) {
       await login(email, password);
       toast.success('Login berhasil!');
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
-      toast.error('Login gagal. Periksa kembali email dan password Anda.');
+      const errorMessage = error?.message || 'Login gagal. Periksa kembali email dan password Anda.';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

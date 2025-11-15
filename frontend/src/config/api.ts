@@ -1,5 +1,8 @@
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+// Use relative paths so API calls go to the same domain (works for both dev and production)
+// Vite proxy will handle /api requests in development, and server-combined.js handles it in production
+const isProduction = import.meta.env.PROD;
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const api = {
   auth: {

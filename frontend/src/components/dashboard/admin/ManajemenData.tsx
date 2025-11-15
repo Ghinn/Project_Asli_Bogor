@@ -146,11 +146,14 @@ export function ManajemenData() {
   // Get image URL
   const getImageUrl = (filePath: string | undefined) => {
     if (!filePath) return null;
+    // Use relative path in production, localhost in development
+    const isProduction = import.meta.env.PROD;
+    const baseUrl = isProduction ? '' : 'http://localhost:3000';
     // Jika path sudah lengkap dengan uploads/, langsung gunakan
     if (filePath.startsWith('uploads/')) {
-      return `http://localhost:3000/${filePath}`;
+      return `${baseUrl}/${filePath}`;
     }
-    return `http://localhost:3000/${filePath}`;
+    return `${baseUrl}/${filePath}`;
   };
 
   // Handle view detail
